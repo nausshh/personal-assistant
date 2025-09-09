@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SARA - Virtual Assistant</title>
+  <link rel="shortcut icon" href="./assets/bot.png" type="image/x-icon" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      text-align: center;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Avatar / Logo */
+    #logo {
+      margin: 20px auto;
+      width: 120px;
+      border-radius: 50%;
+      box-shadow: 0 0 20px cyan;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 10px cyan; }
+      50% { box-shadow: 0 0 25px cyan; }
+      100% { box-shadow: 0 0 10px cyan; }
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin: 10px 0;
+    }
+    #name { color: cyan; }
+    #va { color: #00f7ff; }
+
+    /* Voice gif */
+    #voice {
+      width: 80px;
+      margin: 10px auto;
+      display: none; /* visible only when listening */
+    }
+
+    /* Chatbox */
+    .chatbox {
+      flex: 10;
+      width: 100%;              /* expanded chatbox */
+      max-width: 700px;        /* make it wider */
+      background: rgba(10, 10, 10, 10);
+      border-radius: 60px;
+      padding: 30px;
+      margin: 30px auto;
+      overflow-y: auto;
+    }
+
+    .message {
+      margin: 10px 0;
+      padding: 15px 15px;
+      border-radius: 10px;
+      line-height: 1.5;
+      word-wrap: break-word;
+      font-size: 16px;
+    }
+
+    .user {
+      background: #007bff;
+      margin-left: auto;
+      text-align: right;
+      max-width: 70%;
+    }
+
+    .bot {
+        
+      background: #111;
+      border: 1px solid cyan;
+      margin-right: auto;
+      text-align: left;
+      max-width: 90%;           /* widened bot responses */
+      width: fit-content;       /* auto expand to fit text */
+    }
+
+    /* Input area */
+    .input-area {
+      display: flex;
+      width: 95%;
+      max-width: 700px;
+      margin: 0 auto 15px auto;
+    }
+
+    input {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px 0 0 8px;
+      border: none;
+      outline: none;
+      font-size: 15px;
+    }
+
+    button {
+      background: cyan;
+      color: black;
+      border: none;
+      padding: 12px 18px;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 0 8px 8px 0;
+      font-size: 15px;
+    }
+
+    button:hover {
+      background: #00f7ff;
+    }
+
+    /* Quick actions */
+    .actions {
+      margin: 10px 0;
+    }
+    .actions button {
+      margin: 5px;
+      border-radius: 20px;
+      padding: 8px 15px;
+    }
+
+    /* Footer */
+    .footer {
+      background: rgba(0,0,0,0.4);
+      padding: 10px;
+      font-size: 0.9rem;
+    }
+    .footer a {
+      color: cyan;
+      text-decoration: none;
+      margin: 0 5px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Bot Logo -->
+  <img src="./assets/bot.gif" alt="logo" id="logo" />
+  <h1>
+    I'm <span id="name">SARA</span>, Your
+    <span id="va">Virtual Assistant</span>
+  </h1>
+
+  <!-- Chatbox -->
+  <div class="chatbox" id="chatbox"></div>
+
+  <!-- Input Area -->
+  <div class="input-area">
+    <input type="text" id="userInput" placeholder="Type your message...">
+    <button onclick="sendMessage()">Send</button>
+    <button onclick="startListening()">🎤</button>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="actions">
+    <button onclick="quickAction('weather')">☀️ Weather</button>
+    <button onclick="quickAction('time')">⏰ Time</button>
+    <button onclick="quickAction('open youtube')">📺 YouTube</button>
+  </div>
+
+  <!-- Listening animation -->
+  <img src="./assets/Assistant.gif" alt="voice" id="voice" />
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p>Created by <span>Nausheen Fatima</span></p>
+      <p>Virtual Assistant: SARA | A Web-based Solution to Enhance Productivity</p>
+    </div>
+    <div class="footer-links">
+      <p>Connect with me:</p>
+      <a href="https://www.linkedin.com/in/nausheenfatima" target="_blank" class="footer-link">LinkedIn</a>
+      <a href="https://github.com/nausheenfatima" target="_blank" class="footer-link">GitHub</a>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 Nausheen Fatima. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    const chatbox = document.getElementById("chatbox");
+    const voiceGif = document.getElementById("voice");
+
+    function addMessage(sender, text) {
+      const msg = document.createElement("div");
+      msg.className = "message " + sender;
+      msg.textContent = text;
+      chatbox.appendChild(msg);
+      chatbox.scrollTop = chatbox.scrollHeight;
+    }
+
+    function sendMessage() {
+      let input = document.getElementById("userInput");
+      let message = input.value.trim();
+      if (!message) return;
+      addMessage("user", message);
+      input.value = "";
+
+      // Dummy AI response
+      setTimeout(() => {
+        addMessage("bot", "SARA: I understood \"" + message + "\" 🤖");
+      }, 600);
+    }
+
+    // Quick Actions
+    function quickAction(action) {
+      addMessage("user", action);
+      if (action === "weather") {
+        addMessage("bot", "SARA: It's sunny ☀️ 32°C in Hyderabad.");
+      } else if (action === "time") {
+        addMessage("bot", "SARA: Current time is " + new Date().toLocaleTimeString());
+      } else if (action === "open youtube") {
+        addMessage("bot", "SARA: Opening YouTube...");
+        window.open("https://youtube.com", "_blank");
+      }
+    }
+
+    // Speech Recognition
+    function startListening() {
+      if (!('webkitSpeechRecognition' in window)) {
+        alert("Speech recognition not supported in this browser.");
+        return;
+      }
+      const recognition = new webkitSpeechRecognition();
+      recognition.lang = "en-US";
+      recognition.start();
+      voiceGif.style.display = "block"; // show listening animation
+
+      recognition.onresult = function(event) {
+        voiceGif.style.display = "none"; // hide after listening
+        const transcript = event.results[0][0].transcript;
+        addMessage("user", transcript);
+
+        // Simulated response
+        setTimeout(() => {
+          addMessage("bot", "SARA: You said \"" + transcript + "\" 🎤");
+        }, 600);
+      };
+
+      recognition.onend = function() {
+        voiceGif.style.display = "none"; // hide if stopped
+      };
+    }
+  </script>
+</body>
+</html>
